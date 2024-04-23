@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ArtwiseMobileCRUD</string>
+    <string name="product_list_title">Tittle</string>
+    <string name="product_name_label">name</string>
+    <string name="product_description_label">Description</string>
+    <string name="product_slug_label">Slug</string>
+    <string name="product_content_label">Content</string>
+    <string name="product_images_label">Images</string>
+    <string name="product_price_label">Price</string>
+    <string name="product_category_label">Category</string>
+    <string name="add_product_title">Add Product Tittle</string>
+    <string name="add_product_button">Add Product Button</string>
+    <string name="edit_product_title">Edit Product Button</string>
+    <string name="edit_product_button">Edit Product Button</string>
+</resources>
