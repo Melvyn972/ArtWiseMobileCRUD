@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AndroidMobileCRUD"
+rootProject.name = "ArtwiseMobileCrud"
 include(":app")

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <EditText
+        android:id="@+id/product_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name" />
+
+    <EditText
+        android:id="@+id/product_slug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Slug" />
+
+    <EditText
+        android:id="@+id/product_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Content" />
+
+    <EditText
+        android:id="@+id/product_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description" />
+
+    <EditText
+        android:id="@+id/product_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Images" />
+
+    <EditText
+        android:id="@+id/product_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Price" />
+
+    <EditText
+        android:id="@+id/product_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Category" />
+
+    <Button
+        android:id="@+id/add_product_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Add Product" />
+
+</LinearLayout>
