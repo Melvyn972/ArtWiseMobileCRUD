@@ -12,4 +12,5 @@
     <string name="add_product_button">Add Product Button</string>
     <string name="edit_product_title">Edit Product Button</string>
     <string name="edit_product_button">Edit Product Button</string>
+    <string name="url">https://artwize-d28899f059fc.herokuapp.com/api</string>
 </resources>
