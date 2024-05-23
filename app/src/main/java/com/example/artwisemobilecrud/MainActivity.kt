@@ -14,40 +14,40 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
+    val page = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val apiController = ApiController(this)
-        val listView: ListView = findViewById(R.id.product_list)
 
+        checkApi(apiController)
+        fetchProduct(apiController,page)
+    }
+
+    private fun checkApi(apiController: ApiController) {
         apiController.checkApi(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_SHORT)
-                        .show()
-                }
+                showToast("Error: ${e.message}")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 runOnUiThread {
                     if (response.isSuccessful) {
-                        // Toast.makeText(this@MainActivity, "API is working", Toast.LENGTH_SHORT).show()
+                        // API is working
                     } else {
-                        Toast.makeText(this@MainActivity, "API is not working", Toast.LENGTH_SHORT)
-                            .show()
+                        showToast("API is not working")
                     }
                 }
             }
         })
+    }
 
-
-        apiController.getProduct(object : Callback {
+    private fun fetchProduct(apiController: ApiController, page: Int) {
+        apiController.getProduct(page, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_SHORT)
-                        .show()
-                }
+                showToast("Error: ${e.message}")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -55,20 +55,12 @@ class MainActivity : AppCompatActivity() {
                     response.body?.string()?.let { responseBody ->
                         val products = parseProducts(responseBody)
                         runOnUiThread {
-                            listView.adapter = ProductAdapter(this@MainActivity, products)
-
-                            Toast.makeText(this@MainActivity, responseBody, Toast.LENGTH_LONG)
-                                .show()
+                            displayProducts(products)
+                            showToast(responseBody)
                         }
                     }
                 } else {
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "API Request Failed: ${response.code}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+                    showToast("API Request Failed: ${response.code}")
                 }
             }
         })
@@ -85,8 +77,8 @@ class MainActivity : AppCompatActivity() {
                 productJson.getString("name"),
                 productJson.getString("content"),
                 productJson.getString("description"),
-                productJson.getString("price"),
                 productJson.getString("images"),
+                productJson.getString("price"),
                 productJson.getString("category")
             )
             products.add(product)
@@ -94,4 +86,14 @@ class MainActivity : AppCompatActivity() {
         return products
     }
 
+    private fun displayProducts(products: List<Product>) {
+        val listView: ListView = findViewById(R.id.product_list)
+        listView.adapter = ProductAdapter(this, products)
+    }
+
+    private fun showToast(message: String) {
+        runOnUiThread {
+            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 }

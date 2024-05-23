@@ -1,6 +1,7 @@
 package com.example.artwisemobilecrud
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,8 +40,19 @@ class ProductAdapter(private val context: Context, private val products: List<Pr
         productPrice.text = product.price
         productCategory.text = product.category
 
+        view.setOnClickListener {
+            val intent = Intent(context, ProductDetailsActivity::class.java).apply {
+                putExtra("product_id", product.id)
+                putExtra("product_name", product.name)
+                putExtra("product_description", product.description)
+                putExtra("product_content", product.content)
+                putExtra("product_images", product.images)
+                putExtra("product_price", product.price)
+                putExtra("product_category", product.category)
+            }
+            context.startActivity(intent)
+        }
+
         return view
     }
-
-
 }

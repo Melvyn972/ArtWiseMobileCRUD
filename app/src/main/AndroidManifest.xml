@@ -23,9 +23,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.artwisemobilecrud.AddProductActivity"
-            android:exported="true" />
-
         <activity android:name="com.example.artwisemobilecrud.ProductDetailsActivity"
             android:exported="true" />
 

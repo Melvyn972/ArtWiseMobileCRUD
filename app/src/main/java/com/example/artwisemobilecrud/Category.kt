@@ -1,0 +1,6 @@
+package com.example.artwisemobilecrud
+
+data class Category(
+    val id: Int,
+    val name: String,
+)
