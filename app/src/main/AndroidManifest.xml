@@ -25,6 +25,8 @@
 
         <activity android:name="com.example.artwisemobilecrud.ProductDetailsActivity"
             android:exported="true" />
+        <activity android:name="com.example.artwisemobilecrud.EditProductActivity"
+            android:exported="true" />
 
     </application>
 
