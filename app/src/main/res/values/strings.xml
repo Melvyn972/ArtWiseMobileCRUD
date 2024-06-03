@@ -10,6 +10,7 @@
     <string name="product_category_label">Category</string>
     <string name="add_product_title">Add Product Tittle</string>
     <string name="add_product_button">Add Product Button</string>
+    <string name="add_product">Add Product</string>
     <string name="edit_product_title">Edit Product Button</string>
     <string name="edit_product_button">Edit Product Button</string>
     <string name="url">https://artwize-d28899f059fc.herokuapp.com/api</string>

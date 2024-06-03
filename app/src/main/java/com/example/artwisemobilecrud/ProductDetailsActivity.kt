@@ -6,9 +6,15 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.androidmobilecrud.R
 import com.squareup.picasso.Picasso
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import okio.IOException
 
 class ProductDetailsActivity : AppCompatActivity() {
 
@@ -59,6 +65,37 @@ class ProductDetailsActivity : AppCompatActivity() {
                 putExtra("product_category", product.category)
             }
             startActivity(intent)
+        }
+        val buttonDeleteProduct: Button = findViewById(R.id.button_delete_product)
+        buttonDeleteProduct.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Confirmation de suppression")
+                .setMessage("Êtes-vous sûr de vouloir supprimer ce produit ?")
+                .setPositiveButton("Oui") { _, _ ->
+                    val apiController = ApiController(this)
+                    apiController.deleteProduct(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            runOnUiThread {
+                                Toast.makeText(this@ProductDetailsActivity, "Erreur lors de la suppression du produit : ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            if (response.isSuccessful) {
+                                runOnUiThread {
+                                    Toast.makeText(this@ProductDetailsActivity, "Produit supprimé avec succès", Toast.LENGTH_SHORT).show()
+                                }
+                                finish()
+                            } else {
+                                runOnUiThread {
+                                    Toast.makeText(this@ProductDetailsActivity, "Erreur lors de la suppression du produit : ${response.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }, product)
+                }
+                .setNegativeButton("Non", null)
+                .show()
         }
     }
 }

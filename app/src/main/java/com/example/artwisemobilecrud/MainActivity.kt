@@ -1,10 +1,12 @@
 package com.example.artwisemobilecrud
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.androidmobilecrud.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -23,7 +25,13 @@ class MainActivity : AppCompatActivity() {
         val apiController = ApiController(this)
 
         checkApi(apiController)
-        fetchProduct(apiController,page)
+        fetchProduct(apiController, page)
+
+        val fabAddProduct: FloatingActionButton = findViewById(R.id.fab_add_product)
+        fabAddProduct.setOnClickListener {
+            val intent = Intent(this@MainActivity, AddProductActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun checkApi(apiController: ApiController) {
