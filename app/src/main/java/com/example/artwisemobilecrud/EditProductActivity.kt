@@ -1,5 +1,6 @@
 package com.example.artwisemobilecrud
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -33,12 +34,14 @@ class EditProductActivity : AppCompatActivity() {
         val editProductContent: EditText = findViewById(R.id.edit_product_content)
         val editProductPrice: EditText = findViewById(R.id.edit_product_price)
         val editProductCategory: EditText = findViewById(R.id.edit_product_category)
+        val editProductImages: EditText = findViewById(R.id.edit_product_images)
 
         editProductName.setText(product.name)
         editProductDescription.setText(product.description)
         editProductContent.setText(product.content)
         editProductPrice.setText(product.price)
         editProductCategory.setText(product.category)
+        editProductImages.setText(product.images)
 
         val buttonSaveProduct: Button = findViewById(R.id.button_save_product)
         buttonSaveProduct.setOnClickListener {
@@ -47,7 +50,7 @@ class EditProductActivity : AppCompatActivity() {
                 editProductName.text.toString(),
                 editProductContent.text.toString(),
                 editProductDescription.text.toString(),
-                product.images,
+                editProductImages.text.toString(),
                 editProductPrice.text.toString(),
                 editProductCategory.text.toString()
             )
@@ -61,6 +64,9 @@ class EditProductActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     if (response.isSuccessful) {
                         Log.d("EditProductActivity", "Product updated successfully")
+                        val intent = Intent(this@EditProductActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     } else {
                         Log.e("EditProductActivity", "API request failed: ${response.code}")
                     }

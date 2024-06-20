@@ -3,8 +3,12 @@ package com.example.artwisemobilecrud
 import okhttp3.*
 import java.io.IOException
 import android.content.Context
+import android.util.Log
 import com.example.androidmobilecrud.R
+import com.google.gson.Gson
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 class ApiController(private val context: Context) {
@@ -27,6 +31,16 @@ class ApiController(private val context: Context) {
         sendRequest(url, emptyMap(), "GET", callback)
     }
 
+    fun getCategoryById(callback: Callback, id: Int) {
+        val url = context.getString(R.string.url) + "/categories/$id"
+        sendRequest(url, emptyMap(), "GET", callback)
+    }
+
+    fun getAllCategories(callback: Callback) {
+        val url = context.getString(R.string.url) + "/categories"
+        sendRequest(url, emptyMap(), "GET", callback)
+    }
+
     fun postProduct(callback: Callback, product: Product) {
         val url = context.getString(R.string.url) + "/products"
         val params = mapOf(
@@ -34,10 +48,29 @@ class ApiController(private val context: Context) {
             "slug" to product.name.toLowerCase().replace(" ", "_"),
             "content" to product.content,
             "description" to product.description,
-            "price" to product.price,
+            "images" to product.images,
+            "price" to product.price.toDouble(),
             "category" to product.category
         )
-        sendRequest(url, params, "POST", callback)
+        sendRequest(url, params, "POST", object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.onFailure(call, e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val gson = Gson()
+                val responseJson = gson.toJson(response.body?.string())
+                Log.d("onResponse", "Response: $responseJson")
+                callback.onResponse(
+                    call, Response.Builder()
+                        .code(response.code)
+                        .message(responseJson)
+                        .protocol(response.protocol)
+                        .request(call.request())
+                        .build()
+                )
+            }
+        })
     }
 
     fun deleteProduct(callback: Callback, product: Product) {
@@ -47,31 +80,41 @@ class ApiController(private val context: Context) {
 
     fun putProduct(callback: Callback, product: Product) {
         val url = context.getString(R.string.url) + "/products/${product.id}"
+        Log.d("putProduct", "url: $url")
         val params = mapOf(
             "name" to product.name,
             "slug" to product.name.toLowerCase().replace(" ", "_"),
             "content" to product.content,
             "description" to product.description,
-            "price" to product.price,
+            "images" to product.images,
+            "price" to product.price.toDouble(),  // Ensure price is an integer
             "category" to product.category
         )
-        sendRequest(url, params, "PUT", callback)
-    }
 
-    fun getCategory(callback: Callback, page: Int?) {
-        val url =
-            context.getString(R.string.url) + "/categories" + if (page != null) "?page=$page" else ""
-        sendRequest(url, emptyMap(), "GET", callback)
-    }
+        sendRequest(url, params, "PUT", object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.onFailure(call, e)
+            }
 
-    fun getCategoryById(callback: Callback, id: String) {
-        val url = context.getString(R.string.url) + "/categories/$id"
-        sendRequest(url, emptyMap(), "GET", callback)
+            override fun onResponse(call: Call, response: Response) {
+                val gson = Gson()
+                val responseJson = gson.toJson(response.body?.string())
+                Log.d("onResponse", "Response: $responseJson")
+                callback.onResponse(
+                    call, Response.Builder()
+                        .code(response.code)
+                        .message(responseJson)
+                        .protocol(response.protocol)
+                        .request(call.request())
+                        .build()
+                )
+            }
+        })
     }
 
     private fun sendRequest(
         url: String,
-        params: Map<String, String>,
+        params: Map<String, Any>,  // Changed type to Any to allow different types of values
         method: String,
         callback: Callback
     ) {
@@ -82,7 +125,7 @@ class ApiController(private val context: Context) {
             "GET" -> {
                 val httpUrlBuilder = url.toHttpUrlOrNull()?.newBuilder()
                 params.forEach { (key, value) ->
-                    httpUrlBuilder?.addQueryParameter(key, value)
+                    httpUrlBuilder?.addQueryParameter(key, value.toString())
                 }
                 val httpUrl = httpUrlBuilder?.build()
                 if (httpUrl != null) {
@@ -92,15 +135,14 @@ class ApiController(private val context: Context) {
             }
 
             "POST", "PUT", "PATCH" -> {
-                val formBuilder = FormBody.Builder()
-                params.forEach { (key, value) ->
-                    formBuilder.add(key, value)
-                }
-                val formBody = formBuilder.build()
+                val gson = Gson()
+                val jsonBody = gson.toJson(params)
+                val body = jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
+                Log.d("jsonBody", jsonBody)
                 when (method) {
-                    "POST" -> requestBuilder.post(formBody)
-                    "PUT" -> requestBuilder.put(formBody)
-                    "PATCH" -> requestBuilder.patch(formBody)
+                    "POST" -> requestBuilder.post(body)
+                    "PUT" -> requestBuilder.put(body)
+                    "PATCH" -> requestBuilder.patch(body)
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.example.artwisemobilecrud
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -44,6 +45,9 @@ class AddProductActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         runOnUiThread {
                             Toast.makeText(this@AddProductActivity, "Produit créé avec succès", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@AddProductActivity, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
                         }
                         finish()
                     } else {
